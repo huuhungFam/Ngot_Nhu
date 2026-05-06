@@ -52,13 +52,14 @@ Lấy tất cả cột trong bảng `customers`.
 Đáp án của tôi:
 
 ```sql
-
+select *
+from customers;
 ```
 
 Nhận xét của ChatGPT:
 
 ```text
-
+Đúng. Câu lệnh lấy toàn bộ cột trong bảng customers. Khi học dùng SELECT * là ổn, nhưng khi làm báo cáo thực tế nên chọn rõ các cột cần dùng.
 ```
 
 ### Câu 2
@@ -68,13 +69,14 @@ Lấy các cột `customer_id`, `customer_name`, `city` trong bảng `customers`
 Đáp án của tôi:
 
 ```sql
-
+select customer_id, customer_name, city
+from customers;
 ```
 
 Nhận xét của ChatGPT:
 
 ```text
-
+Đúng. Bạn chọn đúng 3 cột được yêu cầu từ bảng customers.
 ```
 
 ### Câu 3
@@ -84,13 +86,15 @@ Lấy 10 giao dịch đầu tiên trong bảng `transactions`.
 Đáp án của tôi:
 
 ```sql
-
+select *
+from transactions
+limit 10;
 ```
 
 Nhận xét của ChatGPT:
 
 ```text
-
+Đúng. Câu lệnh lấy 10 dòng từ bảng transactions. Lưu ý: nếu muốn "10 giao dịch đầu tiên" theo một tiêu chí cụ thể, nên thêm ORDER BY, ví dụ theo transaction_date hoặc transaction_id.
 ```
 
 ### Câu 4
@@ -100,13 +104,18 @@ Lấy các giao dịch có `amount` lớn hơn 1000000.
 Đáp án của tôi:
 
 ```sql
-
+select *
+from transactions
+where amount > 1000000
 ```
 
 Nhận xét của ChatGPT:
 
 ```text
-
+Đúng về logic. Bạn lọc đúng các giao dịch có amount > 1000000. Nên thêm dấu ; ở cuối câu để thống nhất thói quen viết SQL:
+select *
+from transactions
+where amount > 1000000;
 ```
 
 ### Câu 5
@@ -116,13 +125,17 @@ Lấy các giao dịch có `status` là `approved`, sắp xếp theo `amount` gi
 Đáp án của tôi:
 
 ```sql
+select *
+from transactions
+where status = 'approved'
+order by amount desc;
 
 ```
 
 Nhận xét của ChatGPT:
 
 ```text
-
+Đúng. Bạn lọc đúng status = 'approved' và sắp xếp amount giảm dần bằng ORDER BY amount DESC.
 ```
 
 ### Câu 6
@@ -132,13 +145,20 @@ Lấy `transaction_id`, `customer_id`, `amount` của 5 giao dịch có số ti�
 Đáp án của tôi:
 
 ```sql
-
+select transaction_id, customer_id, amount
+from transactions
+order by amout desc
+limit 5;
 ```
 
 Nhận xét của ChatGPT:
 
 ```text
-
+Sai do gõ nhầm tên cột: amout phải là amount. Câu đúng:
+select transaction_id, customer_id, amount
+from transactions
+order by amount desc
+limit 5;
 ```
 
 ---
@@ -757,6 +777,54 @@ Nhận xét của ChatGPT:
 
 ```
 
+### Câu 8
+
+Viết câu lệnh tạo bảng `transactions_audit` để lưu các giao dịch cần kiểm tra, gồm các cột: `audit_id`, `transaction_id`, `reason`, `created_at`. Chọn kiểu dữ liệu phù hợp ở mức cơ bản.
+
+Đáp án của tôi:
+
+```sql
+
+```
+
+Nhận xét của ChatGPT:
+
+```text
+
+```
+
+### Câu 9
+
+Viết câu lệnh `INSERT INTO` để thêm một dòng vào bảng `transactions_audit`, với lý do là giao dịch có `amount` âm.
+
+Đáp án của tôi:
+
+```sql
+
+```
+
+Nhận xét của ChatGPT:
+
+```text
+
+```
+
+### Câu 10
+
+Trước khi cập nhật các giao dịch có `amount < 0` sang trạng thái `review`, hãy viết câu `SELECT` kiểm tra các dòng bị ảnh hưởng, rồi viết câu `UPDATE` tương ứng.
+
+Đáp án của tôi:
+
+```sql
+
+```
+
+Nhận xét của ChatGPT:
+
+```text
+
+```
+
 ---
 
 ## Prompt để kiểm tra đáp án
@@ -769,4 +837,3 @@ Với mỗi câu, nếu đúng thì ghi "Đúng" vào phần Nhận xét của C
 Nếu sai, ghi lỗi sai, đáp án đúng, và giải thích ngắn gọn.
 Không xóa đáp án của tôi.
 ```
-
