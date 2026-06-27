@@ -94,6 +94,8 @@ Các trạng thái giao dịch:
 
 ### 1.1. SQL là gì?
 
+> 💡 **Hãy tưởng tượng:** Database giống như một Thư viện khổng lồ với hàng triệu cuốn sách (dữ liệu). Bạn không thể tự mình xông vào và bới tung các kệ sách lên được. Bạn cần nói chuyện với "người Thủ thư". SQL chính là ngôn ngữ bạn dùng để ra lệnh cho người Thủ thư đó tìm đúng cuốn sách bạn cần.
+
 SQL là ngôn ngữ dùng để làm việc với dữ liệu trong cơ sở dữ liệu quan hệ. Dữ liệu quan hệ nghĩa là dữ liệu được lưu thành các bảng, các bảng có thể liên kết với nhau qua khóa.
 
 Trong công việc thống kê, kiểm toán hoặc phân tích dữ liệu, SQL thường dùng để:
@@ -395,6 +397,8 @@ Query này lấy giao dịch đã duyệt nhưng có số tiền âm hoặc quá
 
 ### 2.6. NULL là gì?
 
+> 💡 **Hãy tưởng tượng:** Số `0` nghĩa là bạn mở ví ra và thấy có 0 đồng (bạn biết rõ số lượng là 0). `NULL` nghĩa là bạn thậm chí còn không mang theo ví, hoặc cái ví bị tàng hình. Bạn không thể mang một cái ví tàng hình (`NULL`) đi cộng trừ nhân chia được.
+
 `NULL` nghĩa là chưa có giá trị, không rõ giá trị hoặc không áp dụng.
 
 `NULL` khác với:
@@ -514,6 +518,8 @@ Ví dụ nếu có 100 giao dịch nhưng 5 giao dịch thiếu `amount`:
 
 ### 3.4. GROUP BY
 
+> 💡 **Hãy tưởng tượng:** Bạn có một đống tiền lẻ lộn xộn trên bàn. `GROUP BY mệnh_giá` chính là hành động dùng tay gom tiền thành các cọc 10k, 20k, 50k. Hàm `COUNT()` là hành động đếm xem cọc 50k có mấy tờ. `SUM()` là hành động tính tổng tiền của cọc 50k đó. Bạn bắt buộc phải chia cọc (GROUP BY) thì mới đếm và tính tổng cho từng cọc được.
+
 Để dễ hình dung `GROUP BY` hoạt động như thế nào, hãy xem ví dụ gom nhóm sau đây:
 
 **Dữ liệu gốc:**
@@ -618,6 +624,8 @@ Bạn có thể dùng `GROUP BY` để:
 ## Ngày 4: JOIN và mô hình dữ liệu quan hệ
 
 ### 4.1. Vì sao dữ liệu được tách thành nhiều bảng?
+
+> 💡 **Hãy tưởng tượng:** Bạn là một thám tử. Trên tay trái là danh sách "Mã khách hàng" có dấu hiệu đáng ngờ. Trên tay phải là cuốn danh bạ lưu thông tin cá nhân của toàn dân. Bạn không thể chép nguyên cuốn danh bạ vào danh sách đáng ngờ vì nó quá dài và trùng lặp. Thay vào đó, bạn chỉ cần dùng "Mã khách hàng" để dò (JOIN) sang cuốn danh bạ mỗi khi cần biết tên tuổi của họ.
 
 Trong thực tế, dữ liệu không nên nhồi hết vào một bảng lớn. Ví dụ, nếu mỗi giao dịch đều lặp lại tên khách hàng, thành phố, phân khúc, phòng ban, tên tài khoản, dữ liệu sẽ bị trùng rất nhiều.
 
@@ -783,6 +791,8 @@ Nếu số dòng tăng bất thường, cần kiểm tra khóa join.
 
 ### 5.1. Vì sao cần subquery và CTE?
 
+> 💡 **Hãy tưởng tượng:** Trải nghiệm nấu một bữa ăn phức tạp. Nếu bạn ném thịt chưa thái, rau chưa rửa, gia vị chưa bóc vỏ vào chung một cái chảo khổng lồ (viết 1 query quá dài), món ăn sẽ hỏng bét. CTE giống như khâu "sơ chế": bạn thái thịt bỏ vào bát riêng, nhặt rau để rổ riêng, tính toán xong xuôi từng phần, rồi mới gộp tất cả lại ở bước cuối cùng.
+
 Các câu hỏi thực tế thường không chỉ là "lấy dữ liệu". Chúng thường có nhiều bước.
 
 Ví dụ:
@@ -917,6 +927,8 @@ Dùng CTE khi:
 ## Ngày 6: Window functions và phân tích nâng cao vừa đủ
 
 ### 6.1. Vì sao cần window functions?
+
+> 💡 **Hãy tưởng tượng:** Lệnh `GROUP BY` giống như bạn bắt 10 người đứng thành một cụm và chỉ chụp 1 bức ảnh đại diện cho cả cụm (mất đi chi tiết từng người). Còn `Window Function` giống như một chiếc Flycam (Drone) bay trên cao: ống kính vẫn quay rõ mặt của từng cá nhân (giữ nguyên từng dòng), nhưng trên đầu mỗi người lại lơ lửng một bảng điện tử hiện ra tổng điểm của cả nhóm mà họ đang đứng.
 
 `GROUP BY` rất mạnh, nhưng nó làm mất chi tiết dòng gốc. Ví dụ, nếu tổng hợp theo khách hàng, bạn chỉ còn một dòng cho mỗi khách hàng.
 
