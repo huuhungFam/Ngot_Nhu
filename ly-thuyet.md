@@ -14,6 +14,32 @@ Mục tiêu sau 7 ngày: bạn có thể dùng SQL để đọc dữ liệu, l�
 
 ### Bộ bảng dùng xuyên suốt bài giảng
 
+Dưới đây là sơ đồ quan hệ (ERD) giữa 3 bảng để bạn dễ hình dung cách chúng liên kết với nhau:
+
+```mermaid
+erDiagram
+    customers ||--o{ transactions : "có"
+    accounts ||--o{ transactions : "ghi nhận"
+
+    customers {
+        INT customer_id PK
+        VARCHAR customer_name
+        VARCHAR city
+    }
+    accounts {
+        INT account_id PK
+        VARCHAR account_name
+        VARCHAR department
+    }
+    transactions {
+        INT transaction_id PK
+        INT customer_id FK
+        INT account_id FK
+        DECIMAL amount
+        VARCHAR status
+    }
+```
+
 Trong bài giảng và bài tập, ta giả định có 3 bảng:
 
 ```sql
@@ -488,6 +514,21 @@ Ví dụ nếu có 100 giao dịch nhưng 5 giao dịch thiếu `amount`:
 
 ### 3.4. GROUP BY
 
+Để dễ hình dung `GROUP BY` hoạt động như thế nào, hãy xem ví dụ gom nhóm sau đây:
+
+**Dữ liệu gốc:**
+| id | status | amount |
+|---|---|---|
+| 1 | approved | 100 |
+| 2 | pending | 50 |
+| 3 | approved | 200 |
+
+**Sau khi GROUP BY status và đếm số lượng (COUNT):**
+| status | transaction_count |
+|---|---|
+| approved | 2 |
+| pending | 1 |
+
 Tính số giao dịch theo trạng thái:
 
 ```sql
@@ -606,7 +647,14 @@ Ví dụ:
 
 ### 4.3. INNER JOIN
 
-`INNER JOIN` chỉ lấy các dòng khớp ở cả hai bảng.
+Bạn có thể hình dung JOIN qua biểu đồ Venn (2 vòng tròn giao nhau).
+```text
+  Bảng A (Trái)       Bảng B (Phải)
+ (   Chỉ có ở A   ( PHẦN CHUNG )   Chỉ có ở B   )
+                  ^^^^^^^^^^^^
+```
+
+`INNER JOIN` chỉ lấy **PHẦN CHUNG**, tức là các dòng khớp ở cả hai bảng.
 
 ```sql
 SELECT c.customer_id,
@@ -624,7 +672,14 @@ Nếu một giao dịch có `customer_id` không tồn tại trong `customers`, 
 
 ### 4.4. LEFT JOIN
 
-`LEFT JOIN` giữ tất cả dòng ở bảng bên trái.
+Trái ngược với INNER JOIN, `LEFT JOIN` sẽ lấy trọn vẹn vòng tròn bên trái.
+```text
+  Bảng A (Trái)       Bảng B (Phải)
+ (   Chỉ có ở A   ( PHẦN CHUNG )   Chỉ có ở B   )
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+`LEFT JOIN` giữ tất cả dòng ở bảng bên trái. Dòng nào bên trái không có dữ liệu tương ứng bên phải thì các cột của bảng phải sẽ bị bỏ trống (`NULL`).
 
 ```sql
 SELECT c.customer_id,
@@ -864,6 +919,10 @@ Dùng CTE khi:
 ### 6.1. Vì sao cần window functions?
 
 `GROUP BY` rất mạnh, nhưng nó làm mất chi tiết dòng gốc. Ví dụ, nếu tổng hợp theo khách hàng, bạn chỉ còn một dòng cho mỗi khách hàng.
+
+**Ví dụ sự khác biệt:**
+- Nếu dùng `GROUP BY customer_id`: Bảng kết quả bị thu ngắn lại, mỗi khách hàng chỉ còn 1 dòng tổng.
+- Nếu dùng `Window Function`: Bảng kết quả **giữ nguyên số dòng**, nhưng có thêm 1 cột mới hiển thị tổng của khách hàng đó bên cạnh từng giao dịch.
 
 Window functions cho phép giữ lại từng giao dịch, đồng thời tính thêm các chỉ số theo nhóm.
 

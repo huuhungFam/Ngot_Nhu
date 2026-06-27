@@ -9,6 +9,23 @@ Hướng dẫn:
 
 ## Bộ bảng giả định
 
+Dưới đây là một vài dòng dữ liệu mẫu (Mock Data) để bạn dễ hình dung kết quả trước khi viết code:
+
+**Bảng `customers`:**
+| customer_id | customer_name | city | segment | created_at |
+|---|---|---|---|---|
+| 101 | Nguyễn Văn A | Hà Nội | VIP | 2026-01-01 |
+| 102 | Trần Thị B | HCM | Normal | 2026-01-15 |
+
+**Bảng `transactions`:**
+| transaction_id | customer_id | account_id | transaction_date | amount | status |
+|---|---|---|---|---|---|
+| 1 | 101 | 10 | 2026-01-02 | 1500000 | approved |
+| 2 | 102 | 11 | 2026-01-20 | 300000 | pending |
+| 3 | 101 | 10 | 2026-01-25 | 2000000 | approved |
+
+Cấu trúc bảng chi tiết:
+
 ```sql
 customers(
     customer_id INT,
@@ -361,6 +378,29 @@ Nhận xét của ChatGPT:
 
 ```
 
+### Câu 7 (Tìm lỗi sai)
+
+Đoạn code sau dùng để tính tổng tiền của các giao dịch `approved` theo từng trạng thái. Theo bạn, cú pháp SQL này bị lỗi ở đâu?
+
+```sql
+SELECT status, SUM(amount)
+FROM transactions
+HAVING status = 'approved'
+GROUP BY status;
+```
+
+Đáp án của tôi:
+
+```text
+
+```
+
+Nhận xét của ChatGPT:
+
+```text
+
+```
+
 ---
 
 ## Ngày 4: JOIN
@@ -452,6 +492,28 @@ Tìm các giao dịch không có `customer_id` hợp lệ trong bảng `customer
 Đáp án của tôi:
 
 ```sql
+
+```
+
+Nhận xét của ChatGPT:
+
+```text
+
+```
+
+### Câu 7 (Tìm lỗi sai)
+
+Đoạn code sau muốn lấy danh sách tất cả khách hàng, dù họ có giao dịch hay không. Tuy nhiên, kết quả trả về lại bỏ sót những khách hàng chưa từng có giao dịch. Lỗi logic nằm ở đâu?
+
+```sql
+SELECT c.customer_name, t.amount
+FROM customers AS c
+INNER JOIN transactions AS t ON c.customer_id = t.customer_id;
+```
+
+Đáp án của tôi:
+
+```text
 
 ```
 
