@@ -1,6 +1,6 @@
-# Bài giảng lý thuyết SQL với MySQL trong 7 ngày
+# Tự học SQL với MySQL trong 7 ngày
 
-File này là phần bài giảng lý thuyết đầy đủ để học song song với file `bai_tap_sql_mysql_7_ngay.md`. Nó không chỉ là roadmap. Mỗi ngày gồm mục tiêu, khái niệm, cú pháp, ví dụ, cách tư duy, lỗi thường gặp và ứng dụng trong thống kê, kiểm toán, báo cáo hoặc phân tích dữ liệu.
+Đây là tài liệu **để tự đọc và tự học**, dùng song song với [`bai-tap.md`](bai-tap.md). Mỗi ngày gồm khái niệm, cú pháp, ví dụ, cách tư duy, lỗi thường gặp và ứng dụng trong thống kê, kiểm toán hoặc phân tích dữ liệu.
 
 Mục tiêu sau 7 ngày: bạn có thể dùng SQL để đọc dữ liệu, lọc dữ liệu, nối bảng, tổng hợp, kiểm tra chất lượng dữ liệu, phát hiện bất thường và viết các truy vấn phân tích ở mức đủ tốt để bắt đầu làm việc với dữ liệu thực tế.
 
@@ -12,7 +12,7 @@ Mục tiêu sau 7 ngày: bạn có thể dùng SQL để đọc dữ liệu, l�
 - MySQL Workbench hoặc DBeaver.
 - Một database mẫu như `sakila`, `world`, `employees`, hoặc tự tạo bộ bảng `customers`, `accounts`, `transactions`.
 
-### Bộ bảng dùng xuyên suốt bài giảng
+### Bộ bảng dùng xuyên suốt tài liệu
 
 Dưới đây là sơ đồ quan hệ (ERD) giữa 3 bảng để bạn dễ hình dung cách chúng liên kết với nhau:
 
@@ -40,7 +40,7 @@ erDiagram
     }
 ```
 
-Trong bài giảng và bài tập, ta giả định có 3 bảng:
+Trong phần lý thuyết và bài tập, ta giả định có 3 bảng:
 
 ```sql
 customers(
@@ -80,13 +80,27 @@ Các trạng thái giao dịch:
 - `cancelled`: đã hủy.
 - `review`: cần kiểm tra thêm.
 
-### Cách học mỗi ngày
+### Cách dùng tài liệu để nhớ lâu
 
-1. Đọc bài giảng của ngày đó.
-2. Gõ lại các câu SQL mẫu bằng tay.
-3. Tự giải thích từng dòng query.
-4. Làm bài tương ứng trong file bài tập.
-5. Sau khi điền đáp án, gửi file bài tập cho tôi kiểm tra.
+1. **Đọc để hiểu:** trước mỗi query, đoán bảng kết quả sẽ có những cột và dòng nào.
+2. **Gõ để nhớ:** tự gõ lại query, không sao chép; đổi ít nhất một điều kiện rồi chạy lại.
+3. **Nói để kiểm tra:** giải thích query theo thứ tự xử lý dữ liệu, bắt đầu từ `FROM`, không đọc máy móc từ `SELECT`.
+4. **Làm để vận dụng:** đóng tài liệu và giải bài tương ứng trong [`bai-tap.md`](bai-tap.md).
+5. **Ôn chủ động:** trả lời phần “Tự kiểm tra” mà không nhìn lại nội dung. Nếu chưa trả lời được, đánh dấu và ôn lại vào ngày hôm sau.
+
+> **Công thức đọc một query:** Nguồn nào? → Nối thế nào? → Giữ dòng nào? → Gom nhóm ra sao? → Giữ nhóm nào? → Hiển thị gì? → Sắp xếp và giới hạn thế nào?
+
+### Bản đồ 7 ngày
+
+| Ngày | Câu hỏi chính | Công cụ |
+|---|---|---|
+| 1 | Lấy dòng và cột nào? | `SELECT`, `WHERE`, `ORDER BY`, `LIMIT` |
+| 2 | Lọc đúng kiểu dữ liệu và dữ liệu thiếu thế nào? | `AND`, `OR`, `IN`, `LIKE`, `IS NULL`, `COALESCE` |
+| 3 | Biến dữ liệu chi tiết thành báo cáo thế nào? | `COUNT`, `SUM`, `AVG`, `GROUP BY`, `HAVING` |
+| 4 | Ghép nhiều bảng mà không mất hoặc nhân sai dòng thế nào? | `INNER JOIN`, `LEFT JOIN` |
+| 5 | Chia một bài toán dài thành các bước thế nào? | Subquery, CTE (`WITH`) |
+| 6 | Tính theo nhóm nhưng vẫn giữ từng dòng thế nào? | Window functions |
+| 7 | Kiểm tra dữ liệu và sửa dữ liệu an toàn thế nào? | Data quality, `INSERT`, `UPDATE`, `DELETE` |
 
 ---
 
@@ -182,7 +196,43 @@ FROM transactions
 WHERE status = 'approved';
 ```
 
-Trong SQL, chuỗi văn bản đặt trong dấu nháy đơn `'...'`.
+Trong SQL, chuỗi văn bản nên đặt trong dấu nháy đơn `'...'`. Đừng dựa vào dấu nháy kép vì cách MySQL hiểu nó có thể thay đổi theo SQL mode.
+
+### 1.6. ORDER BY để sắp xếp
+
+```sql
+SELECT *
+FROM transactions
+ORDER BY amount DESC;
+```
+
+- `ASC`: tăng dần.
+- `DESC`: giảm dần.
+
+Ví dụ lấy giao dịch lớn nhất trước:
+
+```sql
+SELECT transaction_id, customer_id, amount
+FROM transactions
+ORDER BY amount DESC;
+```
+
+### 1.7. LIMIT để giới hạn số dòng
+
+```sql
+SELECT *
+FROM transactions
+LIMIT 10;
+```
+
+`LIMIT` rất hữu ích khi xem thử dữ liệu lớn. Thay vì tải cả triệu dòng, bạn chỉ xem 10 dòng đầu.
+
+Kết hợp sắp xếp và giới hạn:
+
+```sql
+SELECT transaction_id, customer_id, amount
+FROM transactions
+ORDER BY amount DESC
 
 ### 1.6. ORDER BY để sắp xếp
 
@@ -226,6 +276,10 @@ Query này lấy 5 giao dịch có số tiền cao nhất.
 
 ### 1.8. Thứ tự viết và thứ tự hiểu query
 
+> 💡 **Hãy tưởng tượng:** Bạn là một Bếp trưởng. Quy trình làm món ăn luôn có thứ tự: (1) Xuống kho lấy nguyên liệu (`FROM`), (2) Nhặt bỏ củ hỏng (`WHERE`), (3) Chia khoai vào từng rổ (`GROUP BY`), (4) Bỏ những rổ quá ít (`HAVING`), (5) Xếp thức ăn lên đĩa và đặt tên món (`SELECT` + `AS`), (6) Bưng ra bàn (`ORDER BY`).
+> 
+> Vì "Nhặt lá sâu" (`WHERE`) diễn ra **TRƯỚC** khi "Đặt tên món" (`SELECT AS`), nên bạn không thể dùng tên món ăn để nhặt lá sâu! Đó là lý do SQL báo lỗi nếu bạn cố dùng Alias trong mệnh đề `WHERE`.
+
 Thứ tự viết thường là:
 
 ```sql
@@ -236,13 +290,17 @@ ORDER BY ...
 LIMIT ...
 ```
 
-Nhưng khi đọc logic, hãy hiểu như sau:
+Nhưng thứ tự xử lý logic đầy đủ nên được ghi nhớ như sau:
 
-1. Lấy dữ liệu từ bảng trong `FROM`.
-2. Lọc dòng bằng `WHERE`.
-3. Chọn cột bằng `SELECT`.
-4. Sắp xếp bằng `ORDER BY`.
-5. Giới hạn số dòng bằng `LIMIT`.
+1. `FROM` / `JOIN`: lấy và nối nguồn dữ liệu.
+2. `WHERE`: lọc từng dòng.
+3. `GROUP BY`: gom các dòng thành nhóm.
+4. `HAVING`: lọc từng nhóm.
+5. `SELECT`: tính và chọn cột trả về.
+6. `ORDER BY`: sắp xếp kết quả.
+7. `LIMIT`: giới hạn số dòng trả về.
+
+> **Mẹo nhớ:** **Nguồn → Dòng → Nhóm → Lọc nhóm → Cột → Xếp → Giới hạn**.
 
 ### 1.9. Ứng dụng trong thống kê và kiểm toán
 
@@ -257,10 +315,18 @@ Bạn có thể dùng kiến thức ngày 1 để:
 ### 1.10. Lỗi thường gặp
 
 - Quên dấu phẩy giữa các cột.
-- Quên dấu chấm phẩy ở cuối query.
+- Quên dấu chấm phẩy khi chạy nhiều câu lệnh trong cùng một script. Với một câu lệnh đơn, nhiều công cụ vẫn chạy được dù thiếu dấu này, nhưng nên giữ thói quen viết `;`.
 - Nhầm tên bảng hoặc tên cột.
 - Dùng nháy kép thay vì nháy đơn cho chuỗi.
 - Lạm dụng `SELECT *`.
+
+### 1.11. Tự kiểm tra
+
+Không nhìn lại nội dung, hãy trả lời:
+
+1. `WHERE` loại bỏ dòng ở giai đoạn nào?
+2. Muốn lấy 5 giao dịch lớn nhất, ba mệnh đề cuối query là gì?
+3. Vì sao không nên dùng `SELECT *` trong báo cáo thật?
 
 ---
 
@@ -428,7 +494,7 @@ SELECT transaction_id,
 FROM transactions;
 ```
 
-Nếu `amount` là `NULL`, cột `amount_clean` sẽ là 0. Nếu `amount` có giá trị, giữ nguyên giá trị đó.
+If `amount` là `NULL`, cột `amount_clean` sẽ là 0. Nếu `amount` có giá trị, giữ nguyên giá trị đó.
 
 Lưu ý: thay `NULL` bằng 0 không phải lúc nào cũng đúng. Trong phân tích, `NULL` có thể nghĩa là dữ liệu thiếu, còn 0 có thể nghĩa là giao dịch không phát sinh tiền. Hai ý nghĩa này khác nhau.
 
@@ -449,6 +515,12 @@ Bạn có thể dùng kiến thức ngày 2 để:
 - Lọc tháng bằng cách dễ sót dữ liệu có giờ.
 - Không phân biệt `NULL` với 0.
 - Dùng kiểu `FLOAT` cho dữ liệu tiền.
+
+### 2.10. Tự kiểm tra
+
+1. Vì sao `amount = NULL` không tìm được dữ liệu thiếu?
+2. `NULL`, `0` và chuỗi rỗng khác nhau thế nào?
+3. Vì sao lọc theo khoảng nửa mở `>= ngày đầu` và `< ngày đầu tháng sau` an toàn cho cả `DATE` lẫn `DATETIME`?
 
 ---
 
@@ -619,6 +691,12 @@ Bạn có thể dùng `GROUP BY` để:
 - Quên lọc trạng thái trước khi tính doanh thu.
 - Không kiểm tra dữ liệu âm hoặc `NULL` trước khi tính tổng.
 
+### 3.9. Tự kiểm tra
+
+1. `COUNT(*)` khác `COUNT(amount)` ở điểm nào?
+2. `WHERE` và `HAVING` lọc ở hai thời điểm nào?
+3. Nếu muốn một dòng cho mỗi khách hàng, cột nào phải có trong `GROUP BY`?
+
 ---
 
 ## Ngày 4: JOIN và mô hình dữ liệu quan hệ
@@ -655,14 +733,34 @@ Ví dụ:
 
 ### 4.3. INNER JOIN
 
-Bạn có thể hình dung JOIN qua biểu đồ Venn (2 vòng tròn giao nhau).
-```text
-  Bảng A (Trái)       Bảng B (Phải)
- (   Chỉ có ở A   ( PHẦN CHUNG )   Chỉ có ở B   )
-                  ^^^^^^^^^^^^
+`JOIN` dùng để ghép thông tin nằm ở nhiều bảng. Để hiểu cách ghép, hãy bắt đầu bằng hai bảng nhỏ:
+
+**Bảng `customers`:**
+
+| customer_id | customer_name |
+|---:|---|
+| 101 | An |
+| 102 | Bình |
+| 103 | Chi |
+
+**Bảng `transactions`:**
+
+| transaction_id | customer_id | amount |
+|---:|---:|---:|
+| 1 | 101 | 500000 |
+| 2 | 101 | 300000 |
+| 3 | 102 | 700000 |
+| 4 | 999 | 200000 |
+
+Điều kiện nối:
+
+```sql
+ON c.customer_id = t.customer_id
 ```
 
-`INNER JOIN` chỉ lấy **PHẦN CHUNG**, tức là các dòng khớp ở cả hai bảng.
+có nghĩa là: với mỗi dòng, MySQL so sánh `customer_id` của bảng `customers` với `customer_id` của bảng `transactions`. Hai dòng được ghép khi hai giá trị bằng nhau.
+
+`INNER JOIN` chỉ trả về những cặp dòng tìm thấy giá trị khớp ở cả hai bảng:
 
 ```sql
 SELECT c.customer_id,
@@ -674,20 +772,29 @@ JOIN transactions AS t
   ON c.customer_id = t.customer_id;
 ```
 
-Query này lấy các giao dịch có khách hàng khớp trong bảng `customers`.
+Kết quả:
 
-Nếu một giao dịch có `customer_id` không tồn tại trong `customers`, giao dịch đó sẽ không xuất hiện trong kết quả `INNER JOIN`.
+| customer_id | customer_name | transaction_id | amount |
+|---:|---|---:|---:|
+| 101 | An | 1 | 500000 |
+| 101 | An | 2 | 300000 |
+| 102 | Bình | 3 | 700000 |
+
+Quan sát kết quả:
+
+- An xuất hiện hai lần vì khách hàng 101 có hai giao dịch. `JOIN` không bắt buộc mỗi dòng chỉ xuất hiện một lần.
+- Chi không xuất hiện vì khách hàng 103 chưa có giao dịch khớp.
+- Giao dịch 4 không xuất hiện vì không có khách hàng mang mã 999.
+
+Có thể dùng biểu đồ Venn để nhớ nhanh rằng `INNER JOIN` chỉ giữ phần **có khớp**. Tuy nhiên, khi viết query, hãy nghĩ chính xác hơn: **SQL đang ghép từng cặp dòng thỏa điều kiện `ON`**.
+
+> **Mẹo nhớ:** `INNER JOIN` = chỉ lấy dòng **ghép được**.
 
 ### 4.4. LEFT JOIN
 
-Trái ngược với INNER JOIN, `LEFT JOIN` sẽ lấy trọn vẹn vòng tròn bên trái.
-```text
-  Bảng A (Trái)       Bảng B (Phải)
- (   Chỉ có ở A   ( PHẦN CHUNG )   Chỉ có ở B   )
- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-```
+`LEFT JOIN` cũng ghép dòng theo điều kiện `ON`, nhưng luôn giữ lại tất cả dòng của bảng viết bên trái. Nếu một dòng bên trái không tìm thấy dòng khớp bên phải, các cột lấy từ bảng bên phải nhận giá trị `NULL`.
 
-`LEFT JOIN` giữ tất cả dòng ở bảng bên trái. Dòng nào bên trái không có dữ liệu tương ứng bên phải thì các cột của bảng phải sẽ bị bỏ trống (`NULL`).
+> **Mẹo nhớ:** tên đứng bên trái `LEFT JOIN` là bảng được bảo toàn. Một dòng bên trái có thể sinh ra nhiều dòng kết quả nếu nó khớp nhiều dòng bên phải.
 
 ```sql
 SELECT c.customer_id,
@@ -699,7 +806,20 @@ LEFT JOIN transactions AS t
   ON c.customer_id = t.customer_id;
 ```
 
-Query này lấy tất cả khách hàng. Nếu khách hàng chưa có giao dịch, các cột từ bảng `transactions` sẽ là `NULL`.
+Với dữ liệu mẫu phía trên, kết quả là:
+
+| customer_id | customer_name | transaction_id | amount |
+|---:|---|---:|---:|
+| 101 | An | 1 | 500000 |
+| 101 | An | 2 | 300000 |
+| 102 | Bình | 3 | 700000 |
+| 103 | Chi | NULL | NULL |
+
+Chi vẫn xuất hiện vì `customers` là bảng bên trái. Do Chi chưa có giao dịch, `transaction_id` và `amount` nhận giá trị `NULL`.
+
+Giao dịch mang `customer_id = 999` vẫn không xuất hiện vì query này bảo toàn bảng `customers`, không bảo toàn bảng `transactions`.
+
+> **Mẹo nhớ:** `LEFT JOIN` = lấy **tất cả bên trái**, bên phải ghép được thì điền, không ghép được thì điền `NULL`.
 
 ### 4.5. Dùng LEFT JOIN để tìm dữ liệu thiếu
 
@@ -784,6 +904,12 @@ Nếu số dòng tăng bất thường, cần kiểm tra khóa join.
 - Dùng `INNER JOIN` làm mất các dòng không khớp mà đáng ra cần kiểm tra.
 - Tổng hợp sau join nhưng không kiểm tra nhân dòng.
 - Đặt alias khó hiểu.
+
+### 4.10. Tự kiểm tra
+
+1. Bảng nào được bảo toàn trong `A LEFT JOIN B`?
+2. Vì sao một dòng giao dịch có thể thành hai dòng sau `JOIN`?
+3. Muốn tìm khách hàng chưa có giao dịch, vì sao dùng `LEFT JOIN` rồi kiểm tra khóa bên phải `IS NULL`?
 
 ---
 
@@ -921,6 +1047,12 @@ Dùng CTE khi:
 - Quên alias cho cột tổng hợp.
 - Viết CTE quá nhiều tầng nhưng không cần thiết.
 - Không kiểm tra từng CTE riêng khi kết quả cuối bị sai.
+
+### 5.9. Tự kiểm tra
+
+1. Khi nào subquery phải trả về đúng một giá trị?
+2. CTE tồn tại trong bao lâu?
+3. Hãy tách bài toán “tổng tiền approved theo khách hàng rồi lọc trên 10 triệu” thành hai bước có tên.
 
 ---
 
@@ -1095,17 +1227,11 @@ WHERE amount > 3 * avg_amount_by_customer;
 - Nhầm `RANK` và `ROW_NUMBER`.
 - Dùng window function trực tiếp trong `WHERE`. Thường cần bọc bằng CTE rồi lọc ở query ngoài.
 
----
+### 6.9. Tự kiểm tra
 
-## Ngày 7: Chất lượng dữ liệu, thao tác dữ liệu và mini project
-
-### 7.1. SQL trong công việc thực tế không chỉ là báo cáo
-
-Khi đi làm với dữ liệu, bạn không chỉ viết query để ra kết quả. Bạn còn phải kiểm tra dữ liệu có đáng tin không.
-
-Các câu hỏi cần hỏi trước khi phân tích:
-
-- Bảng có bao nhiêu dòng?
+1. Điểm khác biệt cốt lõi giữa `GROUP BY` và window function là gì?
+2. `PARTITION BY` và `ORDER BY` trong `OVER(...)` chịu trách nhiệm gì?
+3. Khi hai dòng đồng hạng nhất, hạng tiếp theo của `RANK()` và `DENSE_RANK()` là bao nhiêu?
 - Có dòng trùng không?
 - Có `NULL` ở cột quan trọng không?
 - Có số tiền âm không?
@@ -1238,6 +1364,26 @@ WHERE amount < 0;
 
 Trong môi trường đi làm, bạn thường không được tự ý sửa dữ liệu production. Việc chỉnh dữ liệu cần quyền, quy trình và log rõ ràng.
 
+Khi hệ thống hỗ trợ transaction, nên thực hành trong một transaction để có thể kiểm tra rồi hoàn tác:
+
+```sql
+START TRANSACTION;
+
+UPDATE transactions
+SET status = 'review'
+WHERE amount < 0;
+
+-- Kiểm tra kết quả trước khi quyết định.
+SELECT *
+FROM transactions
+WHERE amount < 0;
+
+ROLLBACK; -- Hoàn tác khi chỉ đang luyện tập.
+-- COMMIT; -- Chỉ dùng khi đã xác nhận thay đổi là đúng.
+```
+
+> `ROLLBACK` chỉ hoàn tác được các thay đổi nằm trong transaction và còn phụ thuộc storage engine; với MySQL, bảng InnoDB hỗ trợ transaction.
+
 ### 7.8. Mini project cuối khóa
 
 Mục tiêu mini project: xây dựng một bộ truy vấn phân tích giao dịch có thể dùng để luyện phỏng vấn hoặc đưa vào portfolio.
@@ -1333,6 +1479,12 @@ Cách tính: SUM(amount) theo DATE_FORMAT(transaction_date, '%Y-%m').
 Lưu ý: chưa loại trừ giao dịch amount <= 0 nếu có.
 ```
 
+### 7.11. Tự kiểm tra
+
+1. Ba kiểm tra đầu tiên bạn sẽ chạy khi nhận một bảng lạ là gì?
+2. Vì sao phải chạy `SELECT` với cùng điều kiện trước `UPDATE` hoặc `DELETE`?
+3. `ROLLBACK` và `COMMIT` khác nhau thế nào?
+
 ---
 
 ## Sau 7 ngày nên học tiếp gì?
@@ -1347,11 +1499,15 @@ Sau khi hoàn thành 7 ngày và làm xong bài tập, hướng học tiếp nê
 6. Phân tích thống kê bằng SQL: percentile, cohort, outlier, sampling.
 7. Quy trình làm việc thực tế: đặt tên query, lưu version, review logic và ghi chú giả định.
 
-## Cách gửi bài cho tôi kiểm tra
+## Checklist hoàn thành
 
-Sau khi điền đáp án vào file `bai_tap_sql_mysql_7_ngay.md`, hãy nhắn:
+Bạn đã hoàn thành tài liệu khi có thể:
 
-```text
-Hãy check đáp án SQL trong file bai_tap_sql_mysql_7_ngay.md.
-Nếu sai, chỉ ra lỗi, sửa câu query, và giải thích ngắn gọn vì sao.
-```
+- Đọc một query theo đúng thứ tự xử lý logic.
+- Dự đoán cấu trúc kết quả trước khi chạy.
+- Giải thích vì sao chọn `INNER JOIN` hay `LEFT JOIN`.
+- Phân biệt `WHERE`, `HAVING` và điều kiện `ON`.
+- Viết báo cáo tổng hợp mà không vô tình nhân dòng.
+- Dùng CTE hoặc window function đúng mục đích.
+- Kiểm tra dữ liệu trước khi phân tích và sửa dữ liệu an toàn.
+- Hoàn thành [`bai-tap.md`](bai-tap.md) mà không mở [`dap-an-bai-tap.md`](dap-an-bai-tap.md) trước.
