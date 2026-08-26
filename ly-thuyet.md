@@ -12,6 +12,8 @@ Mục tiêu sau 7 ngày: bạn có thể dùng SQL để đọc dữ liệu, l�
 - MySQL Workbench hoặc DBeaver.
 - Một database mẫu như `sakila`, `world`, `employees`, hoặc tự tạo bộ bảng `customers`, `accounts`, `transactions`.
 
+Các ví dụ CTE và window function trong tài liệu cần **MySQL 8.0 trở lên**. Nếu dùng phiên bản cũ hơn, cú pháp có thể không chạy.
+
 ### Bộ bảng dùng xuyên suốt tài liệu
 
 Dưới đây là sơ đồ quan hệ (ERD) giữa 3 bảng để bạn dễ hình dung cách chúng liên kết với nhau:
@@ -233,42 +235,6 @@ Kết hợp sắp xếp và giới hạn:
 SELECT transaction_id, customer_id, amount
 FROM transactions
 ORDER BY amount DESC
-
-### 1.6. ORDER BY để sắp xếp
-
-```sql
-SELECT *
-FROM transactions
-ORDER BY amount DESC;
-```
-
-- `ASC`: tăng dần.
-- `DESC`: giảm dần.
-
-Ví dụ lấy giao dịch lớn nhất trước:
-
-```sql
-SELECT transaction_id, customer_id, amount
-FROM transactions
-ORDER BY amount DESC;
-```
-
-### 1.7. LIMIT để giới hạn số dòng
-
-```sql
-SELECT *
-FROM transactions
-LIMIT 10;
-```
-
-`LIMIT` rất hữu ích khi xem thử dữ liệu lớn. Thay vì tải cả triệu dòng, bạn chỉ xem 10 dòng đầu.
-
-Kết hợp sắp xếp và giới hạn:
-
-```sql
-SELECT transaction_id, customer_id, amount
-FROM transactions
-ORDER BY amount DESC
 LIMIT 5;
 ```
 
@@ -362,7 +328,7 @@ Kiểu ngày giờ:
 
 - `DATE`: chỉ có ngày, ví dụ `2026-01-31`.
 - `DATETIME`: có cả ngày và giờ.
-- `TIMESTAMP`: có ngày giờ và thường liên quan đến múi giờ/hệ thống.
+- `TIMESTAMP`: lưu mốc thời gian; MySQL chuyển đổi giữa múi giờ của phiên làm việc và UTC khi ghi/đọc. Phạm vi giá trị của `TIMESTAMP` cũng khác `DATETIME`.
 
 ### 2.3. Các toán tử điều kiện
 
@@ -494,7 +460,7 @@ SELECT transaction_id,
 FROM transactions;
 ```
 
-If `amount` là `NULL`, cột `amount_clean` sẽ là 0. Nếu `amount` có giá trị, giữ nguyên giá trị đó.
+Nếu `amount` là `NULL`, cột `amount_clean` sẽ là 0. Nếu `amount` có giá trị, giữ nguyên giá trị đó.
 
 Lưu ý: thay `NULL` bằng 0 không phải lúc nào cũng đúng. Trong phân tích, `NULL` có thể nghĩa là dữ liệu thiếu, còn 0 có thể nghĩa là giao dịch không phát sinh tiền. Hai ý nghĩa này khác nhau.
 
@@ -1232,6 +1198,18 @@ WHERE amount > 3 * avg_amount_by_customer;
 1. Điểm khác biệt cốt lõi giữa `GROUP BY` và window function là gì?
 2. `PARTITION BY` và `ORDER BY` trong `OVER(...)` chịu trách nhiệm gì?
 3. Khi hai dòng đồng hạng nhất, hạng tiếp theo của `RANK()` và `DENSE_RANK()` là bao nhiêu?
+
+---
+
+## Ngày 7: Chất lượng dữ liệu, thao tác dữ liệu và mini project
+
+### 7.1. SQL trong công việc thực tế không chỉ là báo cáo
+
+Khi làm việc với dữ liệu, viết được query chạy thành công chưa đủ. Trước khi phân tích, cần kiểm tra dữ liệu có đầy đủ, hợp lệ và đáng tin hay không.
+
+Các câu hỏi nên đặt ra khi nhận một bảng mới:
+
+- Bảng có bao nhiêu dòng?
 - Có dòng trùng không?
 - Có `NULL` ở cột quan trọng không?
 - Có số tiền âm không?
